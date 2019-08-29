@@ -16,7 +16,8 @@ import { AWS } from './Facet';
 
 const logger = new Logger('Signer'),
     url = require('url'),
-    crypto = AWS['util'].crypto;
+    crypto = AWS['util'].crypto,
+    config = AWS.config;
 
 const DEFAULT_ALGORITHM = 'AWS4-HMAC-SHA256';
 const IOT_SERVICE_NAME = 'iotdevicegateway';
@@ -271,7 +272,7 @@ const sign = function(request, access_info, service_info = null) {
     request.headers = request.headers || {};
 
     // datetime string and date string
-    const dt = new Date(),
+    const dt = new Date(Date.now() + config.systemClockOffset),
         dt_str = dt.toISOString().replace(/[:\-]|\.\d{3}/g, ''),
         d_str = dt_str.substr(0, 8);
 
